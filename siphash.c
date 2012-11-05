@@ -55,7 +55,7 @@ static inline uint64_t get64le(void const* data, size_t ix)
 
 static inline uint8_t get8(void const* data, size_t ix)
 {
-        return *(uint8_t const*)((uint8_t const*)data + ix);
+        return *((uint8_t const*)data + ix);
 }
 
 
