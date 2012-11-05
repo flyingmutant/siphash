@@ -38,9 +38,18 @@ static inline uint64_t rotl64(uint64_t u, int s)
     } while (0)
 
 
-static inline uint64_t get64(void const* data, size_t ix)
+static inline uint64_t get64le(void const* data, size_t ix)
 {
-        return *(uint64_t const*)((uint8_t const*)data + ix * 8);
+        uint8_t const* p = (uint8_t const*)data + ix * 8;
+
+        return (uint64_t)p[0] << (0 * 8) |
+               (uint64_t)p[1] << (1 * 8) |
+               (uint64_t)p[2] << (2 * 8) |
+               (uint64_t)p[3] << (3 * 8) |
+               (uint64_t)p[4] << (4 * 8) |
+               (uint64_t)p[5] << (5 * 8) |
+               (uint64_t)p[6] << (6 * 8) |
+               (uint64_t)p[7] << (7 * 8);
 }
 
 
@@ -71,7 +80,7 @@ uint64_t siphash24(uint64_t key0, uint64_t key1, void const* data, size_t size)
         uint64_t v3 = key1 ^ 0x7465646279746573ull;
 
         for (size_t i = 0; i < size / 8; ++i) {
-                uint64_t m = get64(data, i);
+                uint64_t m = get64le(data, i);
                 sipcompress2(m);
         }
         uint64_t m = siplast(data, size);
