@@ -72,7 +72,7 @@ static inline uint64_t siplast(void const* data, size_t size)
 }
 
 
-uint64_t siphash24(uint64_t key0, uint64_t key1, void const* data, size_t size)
+uint64_t siphash24(uint64_t key0, uint64_t key1, void const* __restrict__ data, size_t size)
 {
         uint64_t v0 = key0 ^ 0x736f6d6570736575ull;
         uint64_t v1 = key1 ^ 0x646f72616e646f6dull;
