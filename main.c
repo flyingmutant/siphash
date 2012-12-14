@@ -14,9 +14,12 @@ int main(void)
                          0x05, 0x06, 0x07, 0x08, 0x09,
                          0x0a, 0x0b, 0x0c, 0x0d, 0x0e};
 
+	uint8_t res[] = {0xe5, 0x45, 0xbe, 0x49, 0x61, 0xca, 0x29, 0xa1};
+	uint64_t r = *(uint64_t*)res;
+
         uint64_t s = siphash24(k0, k1, msg, sizeof(msg));
 
-        printf("SipHash-2-4 test: 0x%016llx (expected 0x%016llx)\n", s, 0xa129ca6149be45e5ull);
+        printf("SipHash-2-4 test: 0x%016llx (expected 0x%016llx)\n", s, r);
 
         return 0;
 }
