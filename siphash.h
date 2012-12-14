@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 
-uint64_t siphash24(uint64_t key0, uint64_t key1, void const* data, size_t size);
+void siphash24(uint8_t const* key, void const* data, size_t size, uint8_t* out);
 
 
 #endif

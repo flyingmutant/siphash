@@ -4,22 +4,23 @@
 
 int main(void)
 {
-        uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-			 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+        uint8_t key[16];
+        uint8_t msg[15];
 
-        uint64_t k0 = *(uint64_t*)(key + 0);
-        uint64_t k1 = *(uint64_t*)(key + 8);
+        for (size_t i = 0; i < 15; ++i) {
+                key[i] = i;
+                msg[i] = i;
+        }
+        key[15] = 15;
 
-        uint8_t msg[] = {0x00, 0x01, 0x02, 0x03, 0x04,
-                         0x05, 0x06, 0x07, 0x08, 0x09,
-                         0x0a, 0x0b, 0x0c, 0x0d, 0x0e};
+        uint8_t res[8] = {0};
+        siphash24(key, msg, sizeof(msg), res);
 
-	uint8_t res[] = {0xe5, 0x45, 0xbe, 0x49, 0x61, 0xca, 0x29, 0xa1};
-	uint64_t r = *(uint64_t*)res;
-
-        uint64_t s = siphash24(k0, k1, msg, sizeof(msg));
-
-        printf("SipHash-2-4 test: 0x%016llx (expected 0x%016llx)\n", s, r);
+        printf("SipHash-2-4 test: ");
+        for (size_t i = 0; i < 8; ++i) {
+                printf("0x%02x ", res[i]);
+        }
+        printf("(expected 0xa129ca6149be45e5 in LE form)\n");
 
         return 0;
 }

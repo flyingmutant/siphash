@@ -41,15 +41,23 @@ static inline uint64_t rotl64(uint64_t u, int s)
 static inline uint64_t get64le(void const* data, size_t ix)
 {
         uint8_t const* p = (uint8_t const*)data + ix * 8;
+        uint64_t ret = 0;
 
-        return (uint64_t)p[0] << (0 * 8) |
-               (uint64_t)p[1] << (1 * 8) |
-               (uint64_t)p[2] << (2 * 8) |
-               (uint64_t)p[3] << (3 * 8) |
-               (uint64_t)p[4] << (4 * 8) |
-               (uint64_t)p[5] << (5 * 8) |
-               (uint64_t)p[6] << (6 * 8) |
-               (uint64_t)p[7] << (7 * 8);
+        for (size_t i = 0; i < 8; ++i) {
+                ret |= (uint64_t)p[i] << (i * 8);
+        }
+
+        return ret;
+}
+
+
+static inline void put64le(uint64_t v, void* out)
+{
+        uint8_t* p = (uint8_t*)out;
+
+        for (size_t i = 0; i < 8; ++i) {
+                p[i] = (uint8_t)(v >> (i * 8));
+        }
 }
 
 
@@ -72,8 +80,11 @@ static inline uint64_t siplast(void const* data, size_t size)
 }
 
 
-uint64_t siphash24(uint64_t key0, uint64_t key1, void const* data, size_t size)
+void siphash24(uint8_t const* key, void const* data, size_t size, uint8_t* out)
 {
+        uint64_t key0 = get64le(key, 0);
+        uint64_t key1 = get64le(key, 1);
+
         uint64_t v0 = key0 ^ 0x736f6d6570736575ull;
         uint64_t v1 = key1 ^ 0x646f72616e646f6dull;
         uint64_t v2 = key0 ^ 0x6c7967656e657261ull;
@@ -93,6 +104,6 @@ uint64_t siphash24(uint64_t key0, uint64_t key1, void const* data, size_t size)
         sipround();
         sipround();
 
-        return v0 ^ v1 ^ v2 ^ v3;
+        put64le(v0 ^ v1 ^ v2 ^ v3, out);
 }
 
