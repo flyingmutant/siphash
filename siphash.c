@@ -7,35 +7,37 @@ static inline uint64_t rotl64(uint64_t u, int s)
 }
 
 
-#define sipround() do {         \
-        v0 += v1;               \
-        v1 = rotl64(v1, 13);    \
-        v1 ^= v0;               \
-        v0 = rotl64(v0, 32);    \
-                                \
-        v2 += v3;               \
-        v3 = rotl64(v3, 16);    \
-        v3 ^= v2;               \
-                                \
-        v2 += v1;               \
-        v1 = rotl64(v1, 17);    \
-        v1 ^= v2;               \
-        v2 = rotl64(v2, 32);    \
-                                \
-        v0 += v3;               \
-        v3 = rotl64(v3, 21);    \
-        v3 ^= v0;               \
-    } while (0)
+static inline void sipround(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3)
+{
+        *v0 += *v1;
+        *v1 = rotl64(*v1, 13);
+        *v1 ^= *v0;
+        *v0 = rotl64(*v0, 32);
+
+        *v2 += *v3;
+        *v3 = rotl64(*v3, 16);
+        *v3 ^= *v2;
+
+        *v2 += *v1;
+        *v1 = rotl64(*v1, 17);
+        *v1 ^= *v2;
+        *v2 = rotl64(*v2, 32);
+
+        *v0 += *v3;
+        *v3 = rotl64(*v3, 21);
+        *v3 ^= *v0;
+}
 
 
-#define sipcompress2(m) do {    \
-        v3 ^= m;                \
-                                \
-        sipround();             \
-        sipround();             \
-                                \
-        v0 ^= m;                \
-    } while (0)
+static inline void sipcompress2(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3, uint64_t m)
+{
+        *v3 ^= m;
+
+        sipround(v0, v1, v2, v3);
+        sipround(v0, v1, v2, v3);
+
+        *v0 ^= m;
+}
 
 
 static inline uint64_t get64le(void const* data, size_t ix)
@@ -91,18 +93,16 @@ void siphash24(uint8_t const* key, void const* data, size_t size, uint8_t* out)
         uint64_t v3 = key1 ^ 0x7465646279746573ull;
 
         for (size_t i = 0; i < size / 8; ++i) {
-                uint64_t m = get64le(data, i);
-                sipcompress2(m);
+                sipcompress2(&v0, &v1, &v2, &v3, get64le(data, i));
         }
-        uint64_t m = siplast(data, size);
-        sipcompress2(m);
+        sipcompress2(&v0, &v1, &v2, &v3, siplast(data, size));
 
         v2 ^= 0xff;
 
-        sipround();
-        sipround();
-        sipround();
-        sipround();
+        sipround(&v0, &v1, &v2, &v3);
+        sipround(&v0, &v1, &v2, &v3);
+        sipround(&v0, &v1, &v2, &v3);
+        sipround(&v0, &v1, &v2, &v3);
 
         put64le(v0 ^ v1 ^ v2 ^ v3, out);
 }
