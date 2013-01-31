@@ -12,9 +12,9 @@ or read the [research paper](https://131002.net/siphash/siphash.pdf).
 
 # Usage
 
-See [siphash.h](https://github.com/flyingmutant/siphash/blob/master/siphash.h).
+See [siphash.h](siphash.h).
 
 
 # License
 
-[MIT](https://github.com/flyingmutant/siphash/blob/master/LICENSE)
+[MIT](LICENSE)
