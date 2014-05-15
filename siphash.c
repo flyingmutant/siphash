@@ -1,13 +1,13 @@
 #include "siphash.h"
 
 
-static inline uint64_t rotl64(uint64_t u, int s)
+static uint64_t rotl64(uint64_t u, int s)
 {
         return (u << s) | (u >> (64 - s));
 }
 
 
-static inline void sipround(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3)
+static void sipround(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3)
 {
         *v0 += *v1;
         *v1 = rotl64(*v1, 13);
@@ -29,7 +29,7 @@ static inline void sipround(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* 
 }
 
 
-static inline void sipcompress2(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3, uint64_t m)
+static void sipcompress2(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64_t* v3, uint64_t m)
 {
         *v3 ^= m;
 
@@ -40,7 +40,7 @@ static inline void sipcompress2(uint64_t* v0, uint64_t* v1, uint64_t* v2, uint64
 }
 
 
-static inline uint64_t get64le(void const* data, size_t ix)
+static uint64_t get64le(void const* data, size_t ix)
 {
         uint8_t const* p = (uint8_t const*)data + ix * 8;
         uint64_t ret = 0;
@@ -53,7 +53,7 @@ static inline uint64_t get64le(void const* data, size_t ix)
 }
 
 
-static inline void put64le(uint64_t v, void* out)
+static void put64le(uint64_t v, void* out)
 {
         uint8_t* p = (uint8_t*)out;
 
@@ -63,13 +63,13 @@ static inline void put64le(uint64_t v, void* out)
 }
 
 
-static inline uint8_t get8(void const* data, size_t ix)
+static uint8_t get8(void const* data, size_t ix)
 {
         return *((uint8_t const*)data + ix);
 }
 
 
-static inline uint64_t siplast(void const* data, size_t size)
+static uint64_t siplast(void const* data, size_t size)
 {
         uint64_t last = 0;
 
