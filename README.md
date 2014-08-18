@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/flyingmutant/siphash.png)](https://travis-ci.org/flyingmutant/siphash)
+[![Build Status](https://travis-ci.org/flyingmutant/siphash.svg?branch=master)](https://travis-ci.org/flyingmutant/siphash)
 
 
 # Intro
