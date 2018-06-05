@@ -3,7 +3,7 @@
 
 # Intro
 
-This is a naïve yet portable C implementation of the SipHash-2-4 pseudo-random function.
+This is a naïve yet portable C implementation of the SipHash-2-4 pseudo-random function. 100 LOC, no macros.
 
 To learn more about SipHash, please visit the [official website](https://www.131002.net/siphash/)
 or read the [research paper](https://131002.net/siphash/siphash.pdf).

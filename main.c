@@ -1,7 +1,6 @@
 #include "siphash.h"
 #include <stdio.h>
 
-
 int main(void)
 {
         uint8_t key[16];
@@ -16,12 +15,11 @@ int main(void)
         uint8_t res[8] = {0};
         siphash24(key, msg, sizeof(msg), res);
 
-        printf("SipHash-2-4 test: ");
+        printf("SipHash-2-4 test: 0x");
         for (size_t i = 0; i < 8; ++i) {
-                printf("0x%02x ", res[i]);
+                printf("%02x", res[i]);
         }
-        printf("(expected 0xa129ca6149be45e5 in LE form)\n");
+        printf(" (expected 0xa129ca6149be45e5 in LE form)\n");
 
         return 0;
 }
-
